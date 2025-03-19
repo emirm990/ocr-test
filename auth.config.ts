@@ -13,6 +13,9 @@ export const authConfig = {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnHome = nextUrl.pathname.startsWith('/home');
+      const isOnSeed = nextUrl.pathname.startsWith('/seed');
+      if (isOnSeed) return true;
+
       if (isOnHome) {
         if (isLoggedIn) return true;
         return false; // Redirect unauthenticated users to login page
