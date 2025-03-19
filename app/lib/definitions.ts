@@ -4,3 +4,10 @@ export type User = {
   email: string;
   password: string;
 };
+
+export type Record = {
+  id: string;
+  user_id: string;
+  text: string;
+  imagepath: string;
+}

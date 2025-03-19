@@ -16,7 +16,7 @@ export default function LogoutForm() {
   return (
     <form action={formAction}>
       <Input type="hidden" name="redirectTo" value={callbackUrl} />
-      <Button type="submit" variant="outlined">Logout</Button>
+      <Button type="submit" variant="outlined" color="warning">Logout</Button>
     </form>
   );
 }

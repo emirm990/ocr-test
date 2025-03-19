@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { authenticate } from '@/app/lib/actions';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { Box, Button, Container, FormLabel, Grid2, Input, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Button, Container, Grid2, Paper, Stack, TextField, Typography } from '@mui/material';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();

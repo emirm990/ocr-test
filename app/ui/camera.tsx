@@ -1,5 +1,5 @@
 import { Button, Stack } from "@mui/material";
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useRef } from "react";
 import Webcam from "react-webcam";
 
 type Props = {
@@ -28,11 +28,20 @@ export default function Camera(props: Props) {
   return (
     <Stack spacing={2}>
       <Stack spacing={2} direction="row">
-        <Webcam ref={webcamRef} width={'100%'} style={{ display: imageSrc ? 'none' : 'block'}} minScreenshotWidth={4096} videoConstraints={videoConstraints} screenshotQuality={1} />
+        <Webcam
+          style={{ display: imageSrc ? 'none' : 'block'}}
+          ref={webcamRef}
+          width={'100%'}
+          minScreenshotWidth={4096}
+          videoConstraints={videoConstraints}
+          screenshotQuality={1}
+          screenshotFormat="image/jpeg"
+          imageSmoothing={false}
+        />
         {imageSrc && <img src={imageSrc} alt="captured" style={{ width: '100%', marginLeft: 0 }} />}
       </Stack>
-      {!imageSrc && <Button onClick={capture}>Capture photo</Button>}
-      {imageSrc && <Button variant="contained" color="warning" onClick={() => setImageSrc(null)}>Delete photo</Button>}
+      {!imageSrc && <Button onClick={capture}>Capture image</Button>}
+      {imageSrc && <Button variant="contained" color="warning" onClick={() => setImageSrc(null)}>Delete image</Button>}
     </Stack>
   )
 }
