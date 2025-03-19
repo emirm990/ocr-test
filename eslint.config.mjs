@@ -20,6 +20,7 @@ const eslintConfig = [
       '@stylistic/indent': ['error', 2],
       '@stylistic/no-extra-semi': 'error',
       '@stylistic/no-trailing-spaces': 'error',
+      '@next/next/no-img-element': 'off',
       "@typescript-eslint/no-unused-vars": [
         "warn", // or "error"
         {

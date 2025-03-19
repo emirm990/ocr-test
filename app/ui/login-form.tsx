@@ -4,6 +4,7 @@ import { useActionState } from 'react';
 import { authenticate } from '@/app/lib/actions';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Box, Button, Container, FormLabel, Grid2, Input, Paper, Stack, TextField, Typography } from '@mui/material';
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
@@ -14,48 +15,51 @@ export default function LoginForm() {
   );
 
   return (
-    <form action={formAction}>
-      <div >
-        <h1>
-          Please log in to continue.
-        </h1>
-        <div>
-          <label
-            htmlFor="email">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            placeholder="Enter your email address"
-            required
-          />
-          <label
-            htmlFor="password"
-          >
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            placeholder="Enter password"
-            required
-            minLength={6}
-          />
-          <input type="hidden" name="redirectTo" value={callbackUrl} />
-          <button type="submit">
-            Log in
-          </button>
-          <Link href="/register">
-            Register
-          </Link>
-        </div>
-        <div>
-          {errorMessage && (<p>{errorMessage}</p>)}
-        </div>
-      </div>
-    </form>
+    <Container sx={{ height: '100vh' }}>
+      <Grid2 container justifyContent="center" alignItems="center" spacing={2} sx={{ height: '100%' }}>
+        <form action={formAction}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" sx={{ mb: 2}}>
+              Please log in to continue.
+            </Typography>
+            <Stack spacing={2}>
+              <Stack>
+                <TextField
+                  id="email"
+                  type="email"
+                  name="email"
+                  label="Email"
+                  required
+                />
+              </Stack>
+              <Stack spacing={2}>
+                <TextField
+                  id="password"
+                  type="password"
+                  name="password"
+                  label="Password"
+                  required
+                  slotProps={{
+                    htmlInput: { minLength: 6 },
+                  }}
+                />
+              </Stack>
+              <input type="hidden" name="redirectTo" value={callbackUrl} />
+              <Button type="submit" variant="contained">
+                Log in
+              </Button>
+              <Button variant="text">
+                <Link href="/register">
+                  Register
+                </Link>
+              </Button>
+            </Stack>
+            <div>
+              {errorMessage && (<p>{errorMessage}</p>)}
+            </div>
+          </Paper>
+        </form>
+      </Grid2>
+    </Container>
   );
 }

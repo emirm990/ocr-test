@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { signOutUser } from '@/app/lib/actions';
 import { useSearchParams } from 'next/navigation';
+import { Button, Input } from '@mui/material';
 
 export default function LogoutForm() {
   const searchParams = useSearchParams();
@@ -14,8 +15,8 @@ export default function LogoutForm() {
 
   return (
     <form action={formAction}>
-      <input type="hidden" name="redirectTo" value={callbackUrl} />
-      <button type="submit">Logout</button>
+      <Input type="hidden" name="redirectTo" value={callbackUrl} />
+      <Button type="submit" variant="outlined">Logout</Button>
     </form>
   );
 }
