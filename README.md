@@ -1,3 +1,3 @@
-OCR using Tesseract or Google Vision API
+OCR using Tesseract and Gemini API
 =======================================
-This is a simple OCR project that uses Tesseract or Google Vision API to extract text from images.
+This is a simple OCR project that uses Tesseract or Google Gemini API to extract text from images.
