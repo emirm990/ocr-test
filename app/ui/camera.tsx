@@ -40,8 +40,10 @@ export default function Camera(props: Props) {
         />
         {imageSrc && <img src={imageSrc} alt="captured" style={{ width: '100%', marginLeft: 0 }} />}
       </Stack>
-      {!imageSrc && <Button onClick={capture}>Capture image</Button>}
-      {imageSrc && <Button variant="contained" color="warning" onClick={() => setImageSrc(null)}>Delete image</Button>}
+      <Stack direction="row" justifyContent="center">
+        {!imageSrc && <Button variant="contained" onClick={capture}>Capture image</Button>}
+        {imageSrc && <Button variant="contained" color="warning" onClick={() => setImageSrc(null)}>Delete image</Button>}
+      </Stack>
     </Stack>
   )
 }

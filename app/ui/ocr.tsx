@@ -3,10 +3,11 @@
 import { Button, CircularProgress, Input, Stack, TextField, Typography } from "@mui/material"
 import { LinearProgressWithLabel } from "./linear-progress"
 import { getText } from "../lib/ocr"
-import { ChangeEvent, FormEvent, useEffect, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react"
 import Camera from "./camera"
 
 export default function Ocr() {
+  const extractedTextContainer = useRef<HTMLDivElement>(null)
   const [loadingAiResponse, setLoadingAiResponse] = useState(false)
   const [extractedText, setExtractedText] = useState('')
   const [aiExtractedText, setAiExtractedText] = useState('')
@@ -99,15 +100,17 @@ export default function Ocr() {
   }, [imageSrc])
 
   useEffect(() => {
-    if (useCamera) {
-      setImage(null)
-      setExtractedText('')
-      setProgress(0)
-    }
+    setImage(null)
+    setImageSrc(null)
+    setFileUrl(null)
+    setExtractedText('')
+    setAiExtractedText('')
+    setProgress(0)
   }, [useCamera])
 
 
   const getAIResponse = async () => {
+    extractedTextContainer.current?.scrollIntoView({ behavior: 'smooth', inline: 'start' })
     setLoadingAiResponse(true)
     const formData = new FormData()
     formData.append('imagePath', fileUrl!)
@@ -142,17 +145,23 @@ export default function Ocr() {
                   input: { accept: 'image/*' },
                 }}
               />) : null}
-            <Button
-              variant="contained"
-              type="submit"
-            >
-              Submit
-            </Button>
+            <Stack spacing={2} direction="row" justifyContent="center" minHeight={36.5 + 16}>
+              {extractedText && (
+                <Button
+                  variant="contained"
+                  type="submit"
+                >
+                  Save
+                </Button>
+              )}
+              {fileUrl && (
+                <Button onClick={getAIResponse}>
+                  Extract text from image
+                </Button>
+              )}
+            </Stack>
           </Stack>
         </form>
-        <Button onClick={getAIResponse} disabled={!fileUrl}>
-          Extract text from image
-        </Button>
       </Stack>
       {image && <img src={image ? URL.createObjectURL(image) : ''} alt="Uploaded image" style={{ maxWidth: '100%' }} />}
       <LinearProgressWithLabel value={progress} />
@@ -164,21 +173,23 @@ export default function Ocr() {
           setExtractedText(e.target.value)
         }}
       />
-      {loadingAiResponse ? (
-        <Stack justifyContent={'center'} alignItems={'center'} spacing={2}>
-          <Typography>Extracting text from image</Typography>
-          <CircularProgress />
-        </Stack>
-      ) : (
-        <TextField
-          value={aiExtractedText}
-          multiline
-          fullWidth
-          onChange={(e) => {
-            setAiExtractedText(e.target.value)
-          }}
-        />
-      )}
+      <div ref={extractedTextContainer}>
+        {loadingAiResponse ? (
+          <Stack justifyContent={'center'} alignItems={'center'} spacing={2}>
+            <Typography>Extracting text from image</Typography>
+            <CircularProgress />
+          </Stack>
+        ) : (
+          <TextField
+            value={aiExtractedText}
+            multiline
+            fullWidth
+            onChange={(e) => {
+              setAiExtractedText(e.target.value)
+            }}
+          />
+        )}
+      </div>
     </Stack>
   )
 }
