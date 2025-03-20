@@ -4,6 +4,7 @@ import postgres from "postgres";
 const sql = postgres(process.env.POSTGRES_URL!);
 
 export async function createNewRecord(userId: string, fileUrl: string, text: string) {
+
   // This is a placeholder for a database call
   if (!userId) {
     return 'Unauthorized';

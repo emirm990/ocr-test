@@ -1,21 +1,29 @@
 'use client'
 
-import { Button, Input, Stack, TextField, Typography } from "@mui/material"
+import { Button, CircularProgress, Input, Stack, TextField, Typography } from "@mui/material"
 import { LinearProgressWithLabel } from "./linear-progress"
 import { getText } from "../lib/ocr"
 import { ChangeEvent, FormEvent, useEffect, useState } from "react"
 import Camera from "./camera"
 
 export default function Ocr() {
+  const [loadingAiResponse, setLoadingAiResponse] = useState(false)
   const [extractedText, setExtractedText] = useState('')
+  const [aiExtractedText, setAiExtractedText] = useState('')
   const [progress, setProgress] = useState(0)
   const [image, setImage] = useState<File | null>(null)
   const [imageSrc, setImageSrc] = useState<string | null | undefined>(null);
-
+  const [fileUrl, setFileUrl] = useState<string | null | undefined>(null);
   const [useCamera, setUseCamera] = useState(false)
 
 
   const handleImageChanged = async (event: ChangeEvent<HTMLInputElement>) => {
+    setImageSrc(undefined)
+    setFileUrl(null)
+    setAiExtractedText('')
+    setExtractedText('')
+
+    setProgress(0)
     const files = event.target.files
     if (!files || files.length === 0) {
       return
@@ -49,9 +57,11 @@ export default function Ocr() {
       formData.append('image', file)
     }
 
-    await fetch("/api/upload", {
+    fetch("/api/upload", {
       method: "POST",
       body: formData,
+    }).then((res) => res.json()).then((data) => {
+      setFileUrl(data.fileUrl)
     })
   }
 
@@ -78,7 +88,9 @@ export default function Ocr() {
       })
     } else {
       setExtractedText('')
+      setAiExtractedText('')
       setProgress(0)
+      setFileUrl(null)
     }
   }, [imageSrc])
 
@@ -89,6 +101,24 @@ export default function Ocr() {
       setProgress(0)
     }
   }, [useCamera])
+
+
+  const getAIResponse = async () => {
+    setLoadingAiResponse(true)
+    const formData = new FormData()
+    formData.append('imagePath', fileUrl!)
+
+    const response = await fetch('/api/gemini', {
+      method: 'POST',
+      body: formData
+    })
+
+    const data = await response.json()
+
+    setAiExtractedText(data.text)
+    setLoadingAiResponse(false)
+  }
+
   return (
     <Stack spacing={2}>
       <Typography align="center" variant="h5">Upload an image to extract text from it.</Typography>
@@ -115,6 +145,9 @@ export default function Ocr() {
             </Button>
           </Stack>
         </form>
+        <Button onClick={getAIResponse} disabled={!fileUrl}>
+          Extract text from image
+        </Button>
       </Stack>
       {image && <img src={image ? URL.createObjectURL(image) : ''} alt="Uploaded image" style={{ maxWidth: '100%' }} />}
       <LinearProgressWithLabel value={progress} />
@@ -126,6 +159,21 @@ export default function Ocr() {
           setExtractedText(e.target.value)
         }}
       />
+      {loadingAiResponse ? (
+        <Stack justifyContent={'center'} alignItems={'center'} spacing={2}>
+          <Typography>Extracting text from image</Typography>
+          <CircularProgress />
+        </Stack>
+      ) : (
+        <TextField
+          value={aiExtractedText}
+          multiline
+          fullWidth
+          onChange={(e) => {
+            setAiExtractedText(e.target.value)
+          }}
+        />
+      )}
     </Stack>
   )
 }

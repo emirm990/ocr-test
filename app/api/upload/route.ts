@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     const fileUrl = `storage/uploads/${file.name}`
     const record = await createNewRecord(user.id, fileUrl, text)
 
-    return NextResponse.json({ status: record, fileUrl, text})
+    return Response.json({ status: record, fileUrl, text})
   } catch (e) {
     console.log(e)
     return NextResponse.json(
@@ -39,6 +39,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-
-  return NextResponse.json({ uploadDir, text, file})
 }
