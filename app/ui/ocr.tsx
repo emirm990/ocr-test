@@ -14,6 +14,7 @@ export default function Ocr() {
   const [image, setImage] = useState<File | null>(null)
   const [imageSrc, setImageSrc] = useState<string | null | undefined>(null);
   const [fileUrl, setFileUrl] = useState<string | null | undefined>(null);
+  const [recordId, setRecordId] = useState<string | null | undefined>(null);
   const [useCamera, setUseCamera] = useState(false)
 
 
@@ -62,6 +63,9 @@ export default function Ocr() {
       body: formData,
     }).then((res) => res.json()).then((data) => {
       setFileUrl(data.fileUrl)
+      const recordId = data.status && Array.isArray(data.status) && data.status.length > 0 ? data.status[0].id : null
+      setRecordId(recordId)
+      alert('Image uploaded!')
     })
   }
 
@@ -107,6 +111,7 @@ export default function Ocr() {
     setLoadingAiResponse(true)
     const formData = new FormData()
     formData.append('imagePath', fileUrl!)
+    formData.append('recordId', recordId!)
 
     const response = await fetch('/api/gemini', {
       method: 'POST',

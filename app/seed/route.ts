@@ -36,7 +36,10 @@ async function seedRecords() {
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       user_id UUID REFERENCES users(id),
       text TEXT NOT NULL,
-      imagePath TEXT NOT NULL
+      ai_text TEXT,
+      image_path TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
     );
   `;
 }

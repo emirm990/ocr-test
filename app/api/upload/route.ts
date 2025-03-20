@@ -23,12 +23,12 @@ export async function POST(request: NextRequest) {
   const text = formData.get('text') as string
 
   const buffer = Buffer.from(await file.arrayBuffer())
-  const uploadDir = join(process.cwd(), 'storage/uploads/')
+  const uploadDir = join(process.cwd(), '/public/uploads')
   try {
 
     await writeFile(`${uploadDir}/${file.name}`, buffer)
 
-    const fileUrl = `storage/uploads/${file.name}`
+    const fileUrl = `public/uploads/${file.name}`
     const record = await createNewRecord(user.id, fileUrl, text)
 
     return Response.json({ status: record, fileUrl, text})

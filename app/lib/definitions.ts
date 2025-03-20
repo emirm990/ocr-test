@@ -9,5 +9,6 @@ export type Record = {
   id: string;
   user_id: string;
   text: string;
-  imagepath: string;
+  ai_text: string | null;
+  image_path: string;
 }

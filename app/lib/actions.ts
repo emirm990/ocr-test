@@ -5,6 +5,9 @@ import postgres from 'postgres';
 import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcrypt';
+import { getRecord } from './data';
+import { join } from 'path';
+import { unlink } from 'fs';
 
 const sql = postgres(process.env.POSTGRES_URL!);
 
@@ -73,4 +76,22 @@ export async function register(
   }
 
   await authenticate(undefined, formData);
+}
+
+export async function deleteImage(recordId: string) {
+  const record = await getRecord(recordId)
+
+  if (!record || !Array.isArray(record) || record.length === 0) {
+    return 'Record not found';
+  }
+
+  const path = record[0].image_path;
+  const filePath = join(process.cwd(), path);
+  // delete image
+  console.log('deleting image', filePath);
+  unlink(filePath, (err) => {
+    if (err) {
+      console.error(err);
+    }
+  });
 }

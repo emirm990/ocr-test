@@ -14,15 +14,19 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const isOnHome = nextUrl.pathname.startsWith('/home');
       const isOnSeed = nextUrl.pathname.startsWith('/seed');
+      const isOnUploads = nextUrl.pathname.startsWith('/uploads');
+
+      if (isOnUploads) return isLoggedIn;
       if (isOnSeed) return true;
 
       if (isOnHome) {
-        if (isLoggedIn) return true;
-        return false; // Redirect unauthenticated users to login page
+        return isLoggedIn;
+      // Redirect unauthenticated users to login page
       } else if (isLoggedIn) {
         return Response.redirect(new URL('/home', nextUrl));
       }
-      return true;
+
+      return false;
     },
   },
 } satisfies NextAuthConfig;

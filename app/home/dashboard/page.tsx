@@ -1,6 +1,8 @@
 'use client'
 
 import { Record } from "@/app/lib/definitions"
+import { DashboardCard } from "@/app/ui/dashboard/card"
+import { Alert, Stack } from "@mui/material"
 import { useEffect, useState } from "react"
 
 export default function Dashboard() {
@@ -28,6 +30,10 @@ export default function Dashboard() {
     getRecords()
   }, [])
 
+  const handleRecordDelete = (id: string) => {
+    setRecords((prevRecords) => prevRecords.filter((record) => record.id !== id))
+  }
+
   if (loading) {
     return <p>Loading...</p>
   }
@@ -37,13 +43,11 @@ export default function Dashboard() {
   }
 
   return (
-    <div>
+    <Stack spacing={2}>
+      {records.length === 0 && <Alert severity="info">No records found!</Alert>}
       {records.map((record) => (
-        <div key={record.id}>
-          <p>{record.text}</p>
-          <p>{record.imagepath}</p>
-        </div>
+        <DashboardCard record={record} key={record.id} onRecordDelete={handleRecordDelete} />
       ))}
-    </div>
+    </Stack>
   )
 }
